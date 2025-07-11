@@ -86,4 +86,44 @@ public class CrudTest {
 
         entityTransaction.commit();
     }
+
+    @Test
+    void remove() {
+        @Cleanup EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
+        @Cleanup EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+
+        Assertions.assertNotNull(entityTransaction);
+
+        try {
+            entityTransaction.begin();
+
+            Customer customer = new Customer();
+            customer.setId("999");
+            customer.setName("Test Data");
+
+            entityManager.persist(customer);
+
+            Assertions.assertEquals("999", customer.getId());
+            Assertions.assertEquals("Test Data", customer.getName());
+
+            Customer customer2 = entityManager.find(Customer.class, "999");
+
+            Assertions.assertEquals("999", customer2.getId());
+            Assertions.assertEquals("Test Data", customer2.getName());
+
+            entityManager.remove(customer2);
+
+            entityManager.flush();
+            entityManager.clear();
+
+            Customer deletedCustomer = entityManager.find(Customer.class, "999");
+            Assertions.assertNull(deletedCustomer); // ✅ Correct check
+
+            entityTransaction.commit();
+        } catch (Throwable e) {
+            entityTransaction.rollback();
+            throw new IllegalArgumentException("Rollback Called - " + e.getMessage());
+        }
+    }
 }
