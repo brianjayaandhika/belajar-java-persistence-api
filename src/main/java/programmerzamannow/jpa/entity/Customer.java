@@ -31,4 +31,7 @@ public class Customer {
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private CustomerType type;
+
+    @Transient // does not affect table
+    private String fullName;
 }
