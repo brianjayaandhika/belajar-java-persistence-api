@@ -10,23 +10,23 @@ import programmerzamannow.jpa.util.JpaUtil;
 
 public class DataTypeTest {
 
-    @Test
-    void dataType() {
-        @Cleanup EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
-        @Cleanup EntityManager entityManager = entityManagerFactory.createEntityManager();
-        EntityTransaction entityTransaction = entityManager.getTransaction();
+        @Test
+        void dataType() {
+            @Cleanup EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
+            @Cleanup EntityManager entityManager = entityManagerFactory.createEntityManager();
+            EntityTransaction entityTransaction = entityManager.getTransaction();
 
-        entityTransaction.begin();
+            entityTransaction.begin();
 
-        Customer customer = new Customer();
-        customer.setId("3");
-        customer.setName("Yono");
-        customer.setPrimaryEmail("yono2196@example.com");
-        customer.setMarried(true);
-        customer.setAge((byte) 20);
+            Customer customer = new Customer();
+            customer.setId("3");
+            customer.setName("Yono");
+            customer.setPrimaryEmail("yono2196@example.com");
+            customer.setMarried(true);
+            customer.setAge((byte) 20);
 
-        entityManager.persist(customer);
-        entityTransaction.commit();
+            entityManager.persist(customer);
+            entityTransaction.commit();
 
-    }
+        }
 }

@@ -11,10 +11,13 @@ import java.util.Calendar;
 
 @Entity
 @Table(name = "categories")
+@EntityListeners({
+        UpdatedAtListener.class,
+})
 @Getter
 @Setter
 @NoArgsConstructor
-public class Category {
+public class Category implements UpdatedAtAware {
 
     @Id
     @Column(name = "id")
