@@ -7,32 +7,22 @@ import lombok.Cleanup;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import programmerzamannow.jpa.entity.Credential;
+import programmerzamannow.jpa.entity.Product;
 import programmerzamannow.jpa.entity.User;
 import programmerzamannow.jpa.entity.Wallet;
 import programmerzamannow.jpa.util.JpaUtil;
 
-public class EntityRelationTest {
+public class FetchTest {
 
     @Test
-    void OneToOneCreate() {
+    void fetch() {
         @Cleanup EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
         @Cleanup EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction entityTransaction = entityManager.getTransaction();
 
         entityTransaction.begin();
 
-        Credential credential = new Credential();
-
-        credential.setId("001");
-        credential.setEmail("khannedy@email.com");
-        credential.setPassword("1234");
-        entityManager.persist(credential);
-
-        User user = new User();
-        user.setId("001");
-        user.setName("Eko Khannedy");
-        user.setCredential(credential);
-        entityManager.persist(user);
+        Product product = entityManager.find(Product.class, "p1");
 
         entityTransaction.commit();
 

@@ -16,6 +16,31 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `brands`
+--
+
+DROP TABLE IF EXISTS `brands`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `brands` (
+  `id` varchar(100) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `description` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `brands`
+--
+
+LOCK TABLES `brands` WRITE;
+/*!40000 ALTER TABLE `brands` DISABLE KEYS */;
+INSERT INTO `brands` VALUES ('001','Honda','Honda semakin didepan');
+/*!40000 ALTER TABLE `brands` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `categories`
 --
 
@@ -202,6 +227,35 @@ INSERT INTO `members` VALUES (1,'example-1@email.com','Mr.','Eko','Budiarty','Kh
 UNLOCK TABLES;
 
 --
+-- Table structure for table `products`
+--
+
+DROP TABLE IF EXISTS `products`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `products` (
+  `id` varchar(100) NOT NULL,
+  `brand_id` varchar(100) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `price` bigint NOT NULL,
+  `description` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_brands_products` (`brand_id`),
+  CONSTRAINT `products_ibfk_1` FOREIGN KEY (`brand_id`) REFERENCES `brands` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `products`
+--
+
+LOCK TABLES `products` WRITE;
+/*!40000 ALTER TABLE `products` DISABLE KEYS */;
+INSERT INTO `products` VALUES ('001','001','Vario 160',18000000,'Vario 2025 160cc'),('002','001','Beat',16000000,'Beat 2025 120cc');
+/*!40000 ALTER TABLE `products` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `skills`
 --
 
@@ -254,29 +308,57 @@ INSERT INTO `users` VALUES ('001','Eko Khannedy');
 UNLOCK TABLES;
 
 --
--- Table structure for table `wallets`
+-- Table structure for table `users_like_products`
 --
 
-DROP TABLE IF EXISTS `wallets`;
+DROP TABLE IF EXISTS `users_like_products`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `wallets` (
+CREATE TABLE `users_like_products` (
+  `user_id` varchar(100) NOT NULL,
+  `product_id` varchar(100) NOT NULL,
+  PRIMARY KEY (`user_id`,`product_id`),
+  KEY `fk_products_users_like_products` (`product_id`),
+  CONSTRAINT `users_like_products_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `users_like_products_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users_like_products`
+--
+
+LOCK TABLES `users_like_products` WRITE;
+/*!40000 ALTER TABLE `users_like_products` DISABLE KEYS */;
+INSERT INTO `users_like_products` VALUES ('001','001'),('001','002');
+/*!40000 ALTER TABLE `users_like_products` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `wallet`
+--
+
+DROP TABLE IF EXISTS `wallet`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `wallet` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_id` varchar(100) NOT NULL,
   `balance` bigint NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_users_wallets` (`user_id`),
-  CONSTRAINT `wallets_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `wallet_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `wallets`
+-- Dumping data for table `wallet`
 --
 
-LOCK TABLES `wallets` WRITE;
-/*!40000 ALTER TABLE `wallets` DISABLE KEYS */;
-/*!40000 ALTER TABLE `wallets` ENABLE KEYS */;
+LOCK TABLES `wallet` WRITE;
+/*!40000 ALTER TABLE `wallet` DISABLE KEYS */;
+INSERT INTO `wallet` VALUES (1,'001',5000000);
+/*!40000 ALTER TABLE `wallet` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -292,4 +374,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-07-17 16:54:58
+-- Dump completed on 2025-07-18 16:58:26
