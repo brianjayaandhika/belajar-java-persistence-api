@@ -146,6 +146,33 @@ INSERT INTO `departments` VALUES ('pzn','tech','Resources');
 UNLOCK TABLES;
 
 --
+-- Table structure for table `employees`
+--
+
+DROP TABLE IF EXISTS `employees`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `employees` (
+  `id` varchar(100) NOT NULL,
+  `type` varchar(50) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `total_manager` int DEFAULT NULL,
+  `total_employee` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `employees`
+--
+
+LOCK TABLES `employees` WRITE;
+/*!40000 ALTER TABLE `employees` DISABLE KEYS */;
+INSERT INTO `employees` VALUES ('budianto','MANAGER','Budianto',NULL,10),('joko','VP','Joko',5,NULL),('khannedy','EMPLOYEE','Khannedy',NULL,NULL);
+/*!40000 ALTER TABLE `employees` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `hobbies`
 --
 
@@ -224,6 +251,78 @@ LOCK TABLES `members` WRITE;
 /*!40000 ALTER TABLE `members` DISABLE KEYS */;
 INSERT INTO `members` VALUES (1,'example-1@email.com','Mr.','Eko','Budiarty','Khannedy'),(2,'example-1@email.com','Mr.','Toha','Ahmad','Baihaqi'),(3,'b1n3m4@example.com','Mr.','Budi','Yono','Bakrie'),(4,'b1n3m4@example.com','Mr.','Budi','Yono','Bakrie');
 /*!40000 ALTER TABLE `members` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `payments`
+--
+
+DROP TABLE IF EXISTS `payments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `payments` (
+  `id` varchar(100) NOT NULL,
+  `amount` bigint NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `payments`
+--
+
+LOCK TABLES `payments` WRITE;
+/*!40000 ALTER TABLE `payments` DISABLE KEYS */;
+/*!40000 ALTER TABLE `payments` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `payments_credit_card`
+--
+
+DROP TABLE IF EXISTS `payments_credit_card`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `payments_credit_card` (
+  `id` varchar(100) NOT NULL,
+  `masked_card` varchar(100) NOT NULL,
+  `bank` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `payments_credit_card_ibfk_1` FOREIGN KEY (`id`) REFERENCES `payments` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `payments_credit_card`
+--
+
+LOCK TABLES `payments_credit_card` WRITE;
+/*!40000 ALTER TABLE `payments_credit_card` DISABLE KEYS */;
+/*!40000 ALTER TABLE `payments_credit_card` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `payments_gopay`
+--
+
+DROP TABLE IF EXISTS `payments_gopay`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `payments_gopay` (
+  `id` varchar(100) NOT NULL,
+  `gopay_id` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `payments_gopay_ibfk_1` FOREIGN KEY (`id`) REFERENCES `payments` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `payments_gopay`
+--
+
+LOCK TABLES `payments_gopay` WRITE;
+/*!40000 ALTER TABLE `payments_gopay` DISABLE KEYS */;
+/*!40000 ALTER TABLE `payments_gopay` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -374,4 +473,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-07-18 16:58:26
+-- Dump completed on 2025-07-20 18:13:58

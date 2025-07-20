@@ -12,6 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Customer {
 
+
     @Id
     @Column(name = "id")
     private String id;
