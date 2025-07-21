@@ -7,15 +7,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "payments_credit_card")
+@Table(name = "transactions_debit")
 @Setter
 @Getter
-public class PaymentCreditCard extends Payment {
+public class TransactionDebit extends Transaction {
 
-    @Column(name = "masked_card")
-    private String maskedCard;
-
-    @Column(name = "bank")
-    private String bank;
-
+    @Column(name = "debit_amount")
+    private Long debitAmount;
 }

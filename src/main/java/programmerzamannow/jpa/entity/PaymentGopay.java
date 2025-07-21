@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "payment_gopay")
+@Table(name = "payments_gopay")
 @Setter
 @Getter
 public class PaymentGopay extends Payment {

@@ -5,18 +5,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "brands")
+@EntityListeners({
+        UpdatedAtListener.class,
+        CreatedAtListener.class,
+})
 @Getter
 @Setter
 @NoArgsConstructor
-public class Brand {
-
-    @Id
-    @Column(name = "id")
-    private String id;
+public class Brand extends AuditableEntity<String> implements UpdatedAtAware, CreatedAtAware {
 
     @Column(name = "name")
     private String name;
@@ -26,4 +27,13 @@ public class Brand {
 
     @OneToMany(mappedBy = "brand")
     private List<Product> product;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Version
+    private Long version;
 }

@@ -25,13 +25,18 @@
         <class>programmerzamannow.jpa.entity.Payment</class>
         <class>programmerzamannow.jpa.entity.PaymentGopay</class>
         <class>programmerzamannow.jpa.entity.PaymentCreditCard</class>
+        <class>programmerzamannow.jpa.entity.Transaction</class>
+        <class>programmerzamannow.jpa.entity.TransactionCredit</class>
+        <class>programmerzamannow.jpa.entity.TransactionDebit</class>
 
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/belajar_java_persistence_api"/>
+<!--            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/belajar_java_persistence_api_test"/>-->
             <property name="jakarta.persistence.jdbc.user" value="root"/>
             <property name="jakarta.persistence.jdbc.password" value="root"/>
+<!--            <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>-->
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
         </properties>
