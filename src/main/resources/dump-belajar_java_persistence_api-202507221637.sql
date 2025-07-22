@@ -26,6 +26,9 @@ CREATE TABLE `brands` (
   `id` varchar(100) NOT NULL,
   `name` varchar(100) NOT NULL,
   `description` varchar(500) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `version` bigint DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -36,7 +39,7 @@ CREATE TABLE `brands` (
 
 LOCK TABLES `brands` WRITE;
 /*!40000 ALTER TABLE `brands` DISABLE KEYS */;
-INSERT INTO `brands` VALUES ('001','Honda','Honda semakin didepan');
+INSERT INTO `brands` VALUES ('001','Honda Updated','Honda semakin didepan',NULL,NULL,NULL),('002','Xiaomi Updated','Xiaomi Company','2025-07-21 04:01:43','2025-07-21 04:01:43',NULL),('003','Nokia','Brand Nokia New Gadget Demo 2','2025-07-21 04:30:46','2025-07-21 06:23:54',4),('004','Apple Co International','Apple Apple Apple','2025-07-21 06:42:46','2025-07-21 06:55:53',2);
 /*!40000 ALTER TABLE `brands` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -273,6 +276,7 @@ CREATE TABLE `payments` (
 
 LOCK TABLES `payments` WRITE;
 /*!40000 ALTER TABLE `payments` DISABLE KEYS */;
+INSERT INTO `payments` VALUES ('cc1',500000),('gopay1',100000);
 /*!40000 ALTER TABLE `payments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -298,6 +302,7 @@ CREATE TABLE `payments_credit_card` (
 
 LOCK TABLES `payments_credit_card` WRITE;
 /*!40000 ALTER TABLE `payments_credit_card` DISABLE KEYS */;
+INSERT INTO `payments_credit_card` VALUES ('cc1','4555-5555','BCA');
 /*!40000 ALTER TABLE `payments_credit_card` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -322,6 +327,7 @@ CREATE TABLE `payments_gopay` (
 
 LOCK TABLES `payments_gopay` WRITE;
 /*!40000 ALTER TABLE `payments_gopay` DISABLE KEYS */;
+INSERT INTO `payments_gopay` VALUES ('gopay1','0899999999');
 /*!40000 ALTER TABLE `payments_gopay` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -350,7 +356,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES ('001','001','Vario 160',18000000,'Vario 2025 160cc'),('002','001','Beat',16000000,'Beat 2025 120cc');
+INSERT INTO `products` VALUES ('001','001','Vario 160',18000000,'Vario 2025 160cc'),('002','001','Beat',16000000,'Beat 2025 120cc'),('003','002','Xiaomi 5',3000000,'Xiaomi 5 Phone'),('004','002','Xiaomi 8 Pro',8000000,'Xiaomi 8 Pro Phone'),('005','004','MacBook Note 2',12000000,'Apple MacBook Note 2');
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -380,6 +386,83 @@ LOCK TABLES `skills` WRITE;
 /*!40000 ALTER TABLE `skills` DISABLE KEYS */;
 INSERT INTO `skills` VALUES (1,4,'CSS',8),(2,4,'HTML',6),(3,4,'NextJs',9);
 /*!40000 ALTER TABLE `skills` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `transactions`
+--
+
+DROP TABLE IF EXISTS `transactions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `transactions` (
+  `id` varchar(100) NOT NULL,
+  `balance` bigint NOT NULL,
+  `created_at` timestamp NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `transactions`
+--
+
+LOCK TABLES `transactions` WRITE;
+/*!40000 ALTER TABLE `transactions` DISABLE KEYS */;
+INSERT INTO `transactions` VALUES ('t1',100000000,'2025-07-21 03:44:24');
+/*!40000 ALTER TABLE `transactions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `transactions_credit`
+--
+
+DROP TABLE IF EXISTS `transactions_credit`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `transactions_credit` (
+  `id` varchar(100) NOT NULL,
+  `balance` bigint NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `credit_amount` bigint NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `transactions_credit`
+--
+
+LOCK TABLES `transactions_credit` WRITE;
+/*!40000 ALTER TABLE `transactions_credit` DISABLE KEYS */;
+INSERT INTO `transactions_credit` VALUES ('t2',20000000,'2025-07-21 03:44:24',15000000);
+/*!40000 ALTER TABLE `transactions_credit` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `transactions_debit`
+--
+
+DROP TABLE IF EXISTS `transactions_debit`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `transactions_debit` (
+  `id` varchar(100) NOT NULL,
+  `balance` bigint NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `debit_amount` bigint NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `transactions_debit`
+--
+
+LOCK TABLES `transactions_debit` WRITE;
+/*!40000 ALTER TABLE `transactions_debit` DISABLE KEYS */;
+INSERT INTO `transactions_debit` VALUES ('t3',10000000,'2025-07-21 03:44:24',2000000);
+/*!40000 ALTER TABLE `transactions_debit` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -473,4 +556,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-07-20 18:13:58
+-- Dump completed on 2025-07-22 16:37:24

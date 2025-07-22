@@ -1,19 +1,15 @@
 package programmerzamannow.jpa;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 import lombok.Cleanup;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import programmerzamannow.jpa.entity.Brand;
-import programmerzamannow.jpa.entity.Member;
-import programmerzamannow.jpa.entity.Product;
-import programmerzamannow.jpa.entity.User;
+import programmerzamannow.jpa.entity.*;
 import programmerzamannow.jpa.util.JpaUtil;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
 public class JPAQueryTest {
 
@@ -116,6 +112,187 @@ public class JPAQueryTest {
             System.out.println("Brand: " + brand.getName());
 
         }
+
+        entityTransaction.commit();
+    }
+
+    @Test
+    void limitOffsetClause() {
+        @Cleanup EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
+        @Cleanup EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+
+        entityTransaction.begin();
+
+        TypedQuery<Brand> query = entityManager.createQuery("select b from Brand b order by b.name desc", Brand.class);
+        query.setFirstResult(2); // offset by n data
+        query.setMaxResults(2); // limit n data
+
+        List<Brand> brands = query.getResultList();
+
+        for (Brand brand : brands) {
+            System.out.println("Brand: " + brand.getName());
+        }
+
+        entityTransaction.commit();
+    }
+
+    @Test
+    void namedQuery() {
+        @Cleanup EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
+        @Cleanup EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+
+        entityTransaction.begin();
+
+        TypedQuery<Brand> query = entityManager.createNamedQuery("Brand.findAllByName", Brand.class);
+
+        List<Brand> brands = query.getResultList();
+
+        for (Brand brand : brands) {
+            System.out.println("Brand: " + brand.getName());
+        }
+
+        entityTransaction.commit();
+    }
+
+    @Test
+    void selectSomeFields() {
+        @Cleanup EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
+        @Cleanup EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+
+        entityTransaction.begin();
+
+        TypedQuery<Object[]> query = entityManager.createQuery("select b.id, b.name from Brand b", Object[].class);
+
+        List<Object[]> list = query.getResultList();
+
+        for (Object[] object : list) {
+            System.out.println(object[0] + ":" + object[1]);
+        }
+
+        entityTransaction.commit();
+    }
+
+    @Test
+    void selectNewConstructor() {
+        @Cleanup EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
+        @Cleanup EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+
+        entityTransaction.begin();
+
+        TypedQuery<SimpleBrand> query = entityManager.createQuery("select new programmerzamannow.jpa.entity.SimpleBrand(b.id, b.name)" + " from Brand b where b.name = :name", SimpleBrand.class);
+        query.setParameter("name", "Xiaomi");
+
+        List<SimpleBrand> simpleBrands = query.getResultList();
+
+        for (SimpleBrand brand : simpleBrands) {
+            System.out.println(brand.getId() + ": " + brand.getName());
+        }
+
+        entityTransaction.commit();
+    }
+
+    @Test
+    void aggregateFunction() {
+        @Cleanup EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
+        @Cleanup EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+
+        entityTransaction.begin();
+
+        TypedQuery<Object[]> query = entityManager.createQuery("select max(p.price), min(p.price), avg(p.price), count(p)" + " from Product p", Object[].class);
+        Object[] result = query.getSingleResult();
+
+        System.out.println("Max: " + result[0]);
+        System.out.println("Min: " + result[1]);
+        System.out.println("Avg: " + result[2]);
+        System.out.println("Count: " + result[3]);
+
+        entityTransaction.commit();
+    }
+
+    @Test
+    void groupByClause() {
+        @Cleanup EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
+        @Cleanup EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+
+        entityTransaction.begin();
+
+        TypedQuery<Object[]> query = entityManager.createQuery("select b.name ,max(p.price), min(p.price), avg(p.price), count(p)" + " from Product p join p.brand b group by b.id having min(p.price) > :min", Object[].class);
+        query.setParameter("min", 1_000_000L);
+        List<Object[]> list = query.getResultList();
+
+        for (Object[] x : list) {
+            System.out.println("Brand: " + x[0]);
+            System.out.println("Max: " + x[1]);
+            System.out.println("Min: " + x[2]);
+            System.out.println("Avg: " + x[3]);
+            System.out.println("Count: " + x[4]);
+        }
+
+
+        entityTransaction.commit();
+    }
+
+    @Test
+    void nativeQuery() {
+        @Cleanup EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
+        @Cleanup EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+
+        entityTransaction.begin();
+
+        Query query = entityManager.createNativeQuery("select * from brands where version is null", Brand.class);
+        List<Brand> brands = query.getResultList();
+
+        for (Brand x : brands) {
+            System.out.println(x.getId() + ":" + x.getName());
+        }
+
+
+        entityTransaction.commit();
+    }
+
+    @Test
+    void namedNativeQuery() {
+        @Cleanup EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
+        @Cleanup EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+
+        entityTransaction.begin();
+
+        TypedQuery<Brand> query = entityManager.createNamedQuery("Brand.native.findAll", Brand.class);
+        List<Brand> brands = query.getResultList();
+
+
+        for (Brand x : brands) {
+            String dateTime = x.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            System.out.println(x.getId() + ":" + x.getName() + ":" + dateTime);
+        }
+
+
+        entityTransaction.commit();
+    }
+
+    @Test
+    void updateQuery() {
+        @Cleanup EntityManagerFactory entityManagerFactory = JpaUtil.getEntityManagerFactory();
+        @Cleanup EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+
+        entityTransaction.begin();
+
+        Query query = entityManager.createQuery("update Brand b set b.name = :name where b.id = :id");
+        query.setParameter("name", "Honda Updated");
+        query.setParameter("id", "001");
+
+        int rowImpacted = query.executeUpdate();
+
+        System.out.println("Impacted Row: " + rowImpacted);
 
         entityTransaction.commit();
     }
